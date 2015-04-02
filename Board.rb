@@ -116,7 +116,8 @@ class Board
     until won?
       render
       moves = get_move
-      start = moves.shift
+      start = moves.unshift
+      p start
       @board[start].perform_moves!(moves)
       toggle_turn
     end
