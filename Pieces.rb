@@ -33,11 +33,23 @@ class Piece
   end
 
   def perform_jump(user_move)
-    # debugger
-    possible_moves = move_diffs
+
     row_direction = user_move.row <=> @position.row
     col_direction = user_move.col <=> @position.col
     over_location = [@position.row + row_direction, @position.col + col_direction]
+    # debugger
+    if jump_valid?(user_move, over_location)
+      @board.move_piece(@position, user_move)
+      true
+    else
+
+      false
+    end
+  end
+
+  def jump_valid?(user_move, over_location)
+    possible_moves = move_diffs
+
     if possible_moves.include?(over_location) &&
       @board[over_location].color != @color && @board[user_move].nil?
 
@@ -74,7 +86,7 @@ class Piece
 
     possible_moves = remove_offboard_moves(possible_moves)
   end
-  
+
   def king_moves
     possible_moves = []
     possible_moves << [@position.row - 1 , @position.col + 1]
