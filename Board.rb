@@ -7,18 +7,31 @@ class Board
   EVEN_ROW = [nil, true, nil, true, nil, true, nil, true]
   ODD_ROW = [true, nil, true, nil,true, nil, true, nil]
 
+  attr_accessor :board
+
   def initialize
     @board = Array.new(8) {Array.new(8)}
     build_board
+  end
+
+
+  def [](pos)
+    i , j = pos
+    @board[i][j]
+  end
+
+  def []=(pos, piece)
+    i , j = pos
+    @board[i][j] = piece
   end
 
   def build_board
     @board.each_with_index do |row, row_idx|
       row.each_index do |col_idx|
         if (row_idx + col_idx).odd? && row_idx < 3
-          @board[row_idx][col_idx] = Piece.new(:black, [row_idx,col_idx],nil)
+          @board[row_idx][col_idx] = Piece.new(:black, [row_idx,col_idx], self)
         elsif (row_idx + col_idx).odd? && row_idx > 4
-          @board[row_idx][col_idx] = Piece.new(:red, [row_idx,col_idx],nil)
+          @board[row_idx][col_idx] = Piece.new(:red, [row_idx,col_idx], self)
         end
       end
     end
@@ -35,6 +48,15 @@ class Board
     end
 
     nil
+  end
+
+  def move_piece(from_pos, to_pos)
+    piece = self[from_pos]
+
+    piece.position = to_pos
+    self[to_pos] = piece
+    self[from_pos] = nil
+
   end
 
 

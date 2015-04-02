@@ -1,3 +1,5 @@
+require 'byebug'
+
 class Array
   def row
     self.first
@@ -10,7 +12,7 @@ end
 
 
 class Piece
-  attr_accessor :position
+  attr_accessor :position, :color
 
   def initialize(color, pos, board)
     @color = color
@@ -21,8 +23,7 @@ class Piece
 
   def perform_side(user_move)
     possible_moves = move_diffs
-    if possible_moves.include?(user_move) &&
-      board[user_move.col][user_move.row].nil?
+    if possible_moves.include?(user_move) && @board[user_move].nil?
       @position == user_move
       true
     else
@@ -30,27 +31,21 @@ class Piece
     end
   end
 
-  def attack?
+  def perform_jump(user_move)
+    # debugger
+    possible_moves = move_diffs
+    row_direction = user_move.row <=> @position.row
+    col_direction = user_move.col <=> @position.col
+    over_location = [@position.row + row_direction, @position.col + col_direction]
+    if possible_moves.include?(over_location) &&
+      @board[over_location].color != @color && @board[user_move].nil?
 
+      true
 
-  end
-
-  def move(user_move)
-    case @position.row <=> user_move.row
-    when 1
-
-
-    when -1
-
+    else
+      false
 
     end
-
-  end
-
-
-  def perform_jump
-
-
   end
 
 
