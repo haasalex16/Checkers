@@ -92,6 +92,10 @@ class Piece
     end
   end
 
+  def render_image
+    @color == :red ? 'r' : 'b'
+  end
+
 
 
 end

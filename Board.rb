@@ -18,10 +18,23 @@ class Board
         if (row_idx + col_idx).odd? && row_idx < 3
           @board[row_idx][col_idx] = Piece.new(:black, [row_idx,col_idx],nil)
         elsif (row_idx + col_idx).odd? && row_idx > 4
-          @board[row_idx][col_idx] = Piece.new(:black, [row_idx,col_idx],nil)
+          @board[row_idx][col_idx] = Piece.new(:red, [row_idx,col_idx],nil)
         end
       end
     end
+  end
+
+  def render
+
+    @board.each do |row|
+      render_array = []
+      row.each do |cell|
+        cell.nil? ? render_array << "_" : render_array << cell.render_image
+      end
+      puts render_array.join("|")
+    end
+
+    nil
   end
 
 
