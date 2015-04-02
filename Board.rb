@@ -12,27 +12,7 @@ class Board
   def initialize(fill_board = true)
     @board = Array.new(8) {Array.new(8)}
     build_board if fill_board
-    @turn = :red
-    create_board_hash
   end
-
-  def toggle_turn
-    @turn == :red ? @turn = :black : @turn = :red
-  end
-
-  def create_board_hash
-    @dictionary = Hash.new
-    columns = %w(a b c d e f g h)
-
-    8.times do |row_idx|
-      8.times do |col_idx|
-        @dictionary[columns[col_idx] + (8 - row_idx).to_s] = [row_idx, col_idx]
-      end
-    end
-
-    @dictionary
-  end
-
 
   def [](pos)
     i , j = pos
@@ -109,33 +89,5 @@ class Board
   def winner
     counts.first == 0 ? "BLACK" : "RED"
   end
-
-  def play
-    puts "Time to play Checkers!"
-
-    until won?
-      render
-      moves = get_move
-      start = moves.unshift
-      p start
-      @board[start].perform_moves!(moves)
-      toggle_turn
-    end
-    puts "Winner is #{winner}"
-
-  end
-
-  def get_move
-    moves = []
-    while true
-      puts "Please give me your moves.  'q' to end string"
-      move = gets.chomp.downcase
-      break if move == "q"
-      moves << create_board_hash[move]
-    end
-
-     p moves
-  end
-
 
 end
