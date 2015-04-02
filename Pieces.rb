@@ -10,7 +10,6 @@ class Array
   end
 end
 
-
 class Piece
   attr_accessor :position, :color
 
@@ -25,8 +24,10 @@ class Piece
     possible_moves = move_diffs
     if possible_moves.include?(user_move) && @board[user_move].nil?
       @position == user_move
+
       true
     else
+
       false
     end
   end
@@ -41,10 +42,9 @@ class Piece
       @board[over_location].color != @color && @board[user_move].nil?
 
       true
-
     else
-      false
 
+      false
     end
   end
 
@@ -62,7 +62,9 @@ class Piece
   def move_diffs
     possible_moves = []
 
-    if @color == :black
+    if @king
+      possible_moves = king_moves
+    elsif @color == :black
       possible_moves << [@position.row + 1 , @position.col + 1]
       possible_moves << [@position.row + 1 , @position.col - 1]
     else
@@ -70,15 +72,15 @@ class Piece
       possible_moves << [@position.row - 1 , @position.col - 1]
     end
 
-    if @king && @color == :black
-      possible_moves << [@position.row - 1 , @position.col + 1]
-      possible_moves << [@position.row - 1 , @position.col - 1]
-    elsif @king && @color == :red
-      possible_moves << [@position.row + 1 , @position.col + 1]
-      possible_moves << [@position.row + 1 , @position.col - 1]
-    end
-
     possible_moves = remove_offboard_moves(possible_moves)
+  end
+  
+  def king_moves
+    possible_moves = []
+    possible_moves << [@position.row - 1 , @position.col + 1]
+    possible_moves << [@position.row - 1 , @position.col - 1]
+    possible_moves << [@position.row + 1 , @position.col + 1]
+    possible_moves << [@position.row + 1 , @position.col - 1]
   end
 
   def remove_offboard_moves(all_moves)
@@ -90,7 +92,5 @@ class Piece
   def render_image
     @color == :red ? 'r' : 'b'
   end
-
-
 
 end
