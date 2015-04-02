@@ -42,7 +42,7 @@ class Piece
 
     when -1
 
-      
+
     end
 
   end
@@ -55,8 +55,8 @@ class Piece
 
 
   def maybe_promote?
-    return true if @color == :red && @position.row == 7
-    return true if @color == :black && @position.row == 0
+    return true if @color == :red && @position.row == 0
+    return true if @color == :black && @position.row == 7
     false
   end
 
@@ -67,7 +67,7 @@ class Piece
   def move_diffs
     possible_moves = []
 
-    if @color == :red
+    if @color == :black
       possible_moves << [@position.row + 1 , @position.col + 1]
       possible_moves << [@position.row + 1 , @position.col - 1]
     else
@@ -75,10 +75,10 @@ class Piece
       possible_moves << [@position.row - 1 , @position.col - 1]
     end
 
-    if @king && @color == :red
+    if @king && @color == :black
       possible_moves << [@position.row - 1 , @position.col + 1]
       possible_moves << [@position.row - 1 , @position.col - 1]
-    elsif @king && @color == :black
+    elsif @king && @color == :red
       possible_moves << [@position.row + 1 , @position.col + 1]
       possible_moves << [@position.row + 1 , @position.col - 1]
     end
