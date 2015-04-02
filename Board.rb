@@ -38,9 +38,9 @@ class Board
   end
 
   def render
-
-    @board.each do |row|
-      render_array = []
+    puts "  0|1|2|3|4|5|6|7"
+    @board.each_with_index do |row,idx|
+      render_array = [idx]
       row.each do |cell|
         cell.nil? ? render_array << "_" : render_array << cell.render_image
       end

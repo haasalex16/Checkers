@@ -20,10 +20,21 @@ class Piece
     @king = false
   end
 
-  def perform_side(user_move)
-    possible_moves = move_diffs
+  def perform_slide(user_move)
+
+    if slide_valid?(user_move)
+      @board.move_piece(@position, user_move)
+
+      true
+    else
+
+      false
+    end
+  end
+
+  def slide_valid?(user_move)
+
     if possible_moves.include?(user_move) && @board[user_move].nil?
-      @position == user_move
 
       true
     else
@@ -39,6 +50,7 @@ class Piece
     over_location = [@position.row + row_direction, @position.col + col_direction]
     # debugger
     if jump_valid?(user_move, over_location)
+      @board[over_location] = nil
       @board.move_piece(@position, user_move)
       true
     else
@@ -48,10 +60,10 @@ class Piece
   end
 
   def jump_valid?(user_move, over_location)
-    possible_moves = move_diffs
+    return false if @board[over_location].nil?
 
     if possible_moves.include?(over_location) &&
-      @board[over_location].color != @color && @board[user_move].nil?
+      @board[over_location].color != @color && @board[user_move].nil? #CHECKK
 
       true
     else
@@ -59,7 +71,6 @@ class Piece
       false
     end
   end
-
 
   def maybe_promote?
     return true if @color == :red && @position.row == 0
@@ -72,32 +83,36 @@ class Piece
   end
 
   def move_diffs
-    possible_moves = []
+    black_moves =   [[1, 1],  [1, -1]]
+    red_moves =     [[-1, 1], [-1, -1]]
 
     if @king
-      possible_moves = king_moves
+      black_moves.concat(red_moves)
     elsif @color == :black
-      possible_moves << [@position.row + 1 , @position.col + 1]
-      possible_moves << [@position.row + 1 , @position.col - 1]
+      black_moves
     else
-      possible_moves << [@position.row - 1 , @position.col + 1]
-      possible_moves << [@position.row - 1 , @position.col - 1]
+      red_moves
+    end
+  end
+
+  def possible_moves
+    possible_moves = []
+
+    move_diffs.each do |(dy, dx)|
+      possible_moves << [@position.row + dy, @position.col + dx]
     end
 
-    possible_moves = remove_offboard_moves(possible_moves)
+    possible_moves = remove_invalid_moves(possible_moves)
   end
 
-  def king_moves
-    possible_moves = []
-    possible_moves << [@position.row - 1 , @position.col + 1]
-    possible_moves << [@position.row - 1 , @position.col - 1]
-    possible_moves << [@position.row + 1 , @position.col + 1]
-    possible_moves << [@position.row + 1 , @position.col - 1]
-  end
+  def remove_invalid_moves(all_moves)
 
-  def remove_offboard_moves(all_moves)
-    all_moves.select do |move|
+    on_board = all_moves.select do |move|
       move.row.between?(0,7) && move.col.between?(0,7)
+    end
+
+    on_board.select do |move|
+      @board[move].nil? || @board[move].color != @color
     end
   end
 
