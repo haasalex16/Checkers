@@ -117,7 +117,7 @@ class Piece
   end
 
   def render_image
-    @color == :red ? 'r' : 'b'
+    @color == :red ? "\u25CE" : "\u25C9"
   end
 
 end

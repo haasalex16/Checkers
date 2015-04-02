@@ -9,9 +9,9 @@ class Board
 
   attr_accessor :board
 
-  def initialize
+  def initialize(fill_board = true)
     @board = Array.new(8) {Array.new(8)}
-    build_board
+    build_board if fill_board
   end
 
 
@@ -59,8 +59,16 @@ class Board
 
   end
 
+  def dup_board
+    new_board = Board.new(false)
 
+    checkers = @board.flatten.compact
 
+    checkers.each do |checker|
+      new_board[checker.position] = Piece.new(checker.color, checker.position, new_board)
+    end
 
+    new_board
+  end
 
 end
