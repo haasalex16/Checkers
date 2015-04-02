@@ -11,7 +11,7 @@ class Array
 end
 
 class Piece
-  attr_accessor :position, :color
+  attr_accessor :position, :color, :king
 
   def initialize(color, pos, board)
     @color = color
@@ -72,7 +72,7 @@ class Piece
     end
   end
 
-  def maybe_promote?
+  def promote?
     return true if @color == :red && @position.row == 0
     return true if @color == :black && @position.row == 7
     false
@@ -117,7 +117,45 @@ class Piece
   end
 
   def render_image
-    @color == :red ? "\u25CE" : "\u25C9"
+    if @king
+      @color == :red ? "\u2654" : "\u265A"
+    else
+      @color == :red ? "\u25CE" : "\u25C9"
+    end
   end
+
+  # =>  start       finish
+  # [[2,3], [3,4], [4,3]]
+  def valid_move_seq?(move_seq)
+    test_board = @board.dup_board
+    # debugger
+    if test_board[@position].perform_moves!(move_seq)
+      return true
+    else
+      raise InvalidMoveError
+    end
+  end
+
+  def perform_moves!(move_seq)
+
+    if move_seq.count == 1
+      return true if perform_slide(move_seq.first)
+      if perform_jump(move_seq.first)
+        return true
+      else
+        return false
+      end
+    else
+      move_seq.each do |move|
+        return false unless perform_jump(move)
+        promote if promote?
+      end
+    end
+
+    promote if promote?
+
+    true
+  end
+
 
 end
