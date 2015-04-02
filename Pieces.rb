@@ -12,21 +12,38 @@ end
 class Piece
   attr_accessor :position
 
-  def initialize(color, pos ,board)
-    @king = false
+  def initialize(color, pos, board)
     @color = color
-    @board = board
     @position = pos
-
+    @board = board
+    @king = false
   end
 
-  def perform_side
-
-
+  def perform_side(user_move)
+    possible_moves = move_diffs
+    if possible_moves.include?(user_move) &&
+      board[user_move.col][user_move.row].nil?
+      @position == user_move
+      true
+    else
+      false
+    end
   end
 
   def attack?
 
+
+  end
+
+  def move(user_move)
+    case @position.row <=> user_move.row
+    when 1
+
+
+    when -1
+
+      
+    end
 
   end
 
@@ -48,24 +65,25 @@ class Piece
   end
 
   def move_diffs
-    @possible_moves = []
+    possible_moves = []
+
     if @color == :red
-      @possible_moves << [@position.row + 1 , @position.col + 1]
-      @possible_moves << [@position.row + 1 , @position.col - 1]
+      possible_moves << [@position.row + 1 , @position.col + 1]
+      possible_moves << [@position.row + 1 , @position.col - 1]
     else
-      @possible_moves << [@position.row - 1 , @position.col + 1]
-      @possible_moves << [@position.row - 1 , @position.col - 1]
+      possible_moves << [@position.row - 1 , @position.col + 1]
+      possible_moves << [@position.row - 1 , @position.col - 1]
     end
 
     if @king && @color == :red
-      @possible_moves << [@position.row - 1 , @position.col + 1]
-      @possible_moves << [@position.row - 1 , @position.col - 1]
+      possible_moves << [@position.row - 1 , @position.col + 1]
+      possible_moves << [@position.row - 1 , @position.col - 1]
     elsif @king && @color == :black
-      @possible_moves << [@position.row + 1 , @position.col + 1]
-      @possible_moves << [@position.row + 1 , @position.col - 1]
+      possible_moves << [@position.row + 1 , @position.col + 1]
+      possible_moves << [@position.row + 1 , @position.col - 1]
     end
-    
-    @possible_moves = remove_offboard_moves(@possible_moves)
+
+    possible_moves = remove_offboard_moves(possible_moves)
   end
 
   def remove_offboard_moves(all_moves)
